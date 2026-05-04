@@ -5,8 +5,9 @@ import WinWindow from '../components/WinWindow';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0); // 0 = form, 1 = code
+  const [step, setStep] = useState(0);
   const [celular, setCelular] = useState('');
+  const [countryCode, setCountryCode] = useState('+55');
   const [form, setForm] = useState({ nome:'', cnpj:'', email:'', celular:'', senha:'' });
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
@@ -18,8 +19,9 @@ export default function RegisterPage() {
     if (Object.values(form).some(v => !v.trim())) { setError('Preencha todos os campos.'); return; }
     setError(''); setLoading(true);
     try {
-      await createSeller(form);
-      setCelular(form.celular);
+      const payload = { ...form, celular: countryCode + form.celular.replace(/\D/g, '') };
+      await createSeller(payload);
+      setCelular(payload.celular);
       setStep(1);
     } catch (err) { setError(err.message); }
     finally { setLoading(false); }
@@ -40,13 +42,12 @@ export default function RegisterPage() {
       <WinWindow title="Cadastro" icon="📝" className="auth-win" style={{ maxWidth: 420 }}>
 
         <div className="auth-brand-area">
-          <div className="auth-brand-icon">🏪</div>
-          <div className="auth-brand-name">MiniMkt</div>
-          <div className="auth-brand-sub">Cadastro de Mini Mercado</div>
+        <div className="auth-brand-icon">📦</div>
+        <div className="auth-brand-name">Britney Spears Supermercados</div>
+        <div className="auth-brand-sub">Gestão de Mini Mercado</div>
         </div>
 
         <div className="auth-body">
-          {/* Step indicator */}
           <div className="step-bar">
             {['Cadastro', 'Ativação'].map((s, i) => (
               <div key={s} className={`step${i < step ? ' done' : i === step ? ' active' : ''}`}>
@@ -73,7 +74,29 @@ export default function RegisterPage() {
                 </div>
                 <div className="field span-2">
                   <label>Celular (WhatsApp)</label>
-                  <input name="celular" placeholder="+5511999999999" value={form.celular} onChange={handle} />
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <select
+                      value={countryCode}
+                      onChange={e => setCountryCode(e.target.value)}
+                      style={{ width: 90, padding: '6px 4px' }}
+                    >
+                      <option value="+55">🇧🇷 +55</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+351">🇵🇹 +351</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+353">🇮🇪 +353</option>
+                      <option value="+54">🇦🇷 +54</option>
+                      <option value="+57">🇨🇴 +57</option>
+                      <option value="+52">🇲🇽 +52</option>
+                    </select>
+                    <input
+                      name="celular"
+                      placeholder="11999999999"
+                      value={form.celular}
+                      onChange={handle}
+                      style={{ flex: 1 }}
+                    />
+                  </div>
                 </div>
                 <div className="field span-2">
                   <label>Senha</label>
