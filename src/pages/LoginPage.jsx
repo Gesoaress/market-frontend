@@ -14,20 +14,6 @@ export default function LoginPage() {
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-/*     const submit = async () => {
-    if (!form.email || !form.senha) { setError('Preencha e-mail e senha.'); return; }
-    setError(''); setLoading(true);
-    try {
-      const data = await login(form.email, form.senha);
-      signIn(data.token, data.seller);
-      navigate('/produtos');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }; */
-  
   const submit = async () => {
     if (!form.email || !form.senha) { setError('Preencha e-mail e senha.'); return; }
     setError(''); setLoading(true);
@@ -42,7 +28,6 @@ export default function LoginPage() {
     }
   };
 
-  
   return (
     <div className="auth-page">
       <WinWindow title="Login" icon="🔐" className="auth-win">
