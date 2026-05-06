@@ -3,9 +3,10 @@ import { useAuth } from '../contexts/AuthContext';
 import WinWindow from '../components/WinWindow';
 
 const NAV = [
-  { to: '/produtos',     icon: '📦', label: 'Produtos'        },
-  { to: '/produtos/novo',icon: '➕', label: 'Novo Produto'     },
-  { to: '/vendas/nova',  icon: '🛒', label: 'Registrar Venda'  },
+  { to: '/dashboard',    icon: '📊', label: 'Dashboard'        },
+  { to: '/produtos',     icon: '📦', label: 'Produtos'          },
+  { to: '/produtos/novo',icon: '➕', label: 'Novo Produto'       },
+  { to: '/vendas/nova',  icon: '🛒', label: 'Registrar Venda'   },
 ];
 
 export default function AppLayout() {
@@ -29,7 +30,7 @@ export default function AppLayout() {
             <NavLink
               key={n.to}
               to={n.to}
-              end={n.to === '/produtos'}
+              end={n.to === '/produtos' || n.to === '/dashboard'}
               className={({ isActive }) => `sb-item${isActive ? ' active' : ''}`}
             >
               <span className="sb-icon">{n.icon}</span>

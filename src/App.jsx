@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductFormPage from './pages/ProductFormPage';
 import SalePage from './pages/SalePage';
+import DashboardPage from './pages/DashboardPage';
 import './styles/global.css';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
 
           <Route element={<PrivateRoute />}>
             <Route element={<AppLayout />}>
+              <Route path="/dashboard"             element={<DashboardPage />} />
               <Route path="/produtos"              element={<ProductsPage />} />
               <Route path="/produtos/novo"         element={<ProductFormPage />} />
               <Route path="/produtos/:id/editar"   element={<ProductFormPage />} />
