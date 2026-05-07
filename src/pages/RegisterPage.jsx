@@ -93,7 +93,10 @@ export default function RegisterPage() {
                       name="celular"
                       placeholder="11999999999"
                       value={form.celular}
-                      onChange={handle}
+                      onChange={e => {
+                        const digits = e.target.value.replace(/\D/g, '').slice(0, 11);
+                        setForm(f => ({ ...f, celular: digits }));
+                      }}
                       style={{ flex: 1 }}
                     />
                   </div>

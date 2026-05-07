@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listProducts, inactivateProduct } from '../services/api';
+import { listProducts, activateProduct } from '../services/api';
 
 const fmt  = p => 'R$ ' + Number(p).toFixed(2).replace('.', ',');
 const EMOJI = ['📦','🥛','🍚','🫘','🥕','🧀','🍳','🌽','🥜','🧅'];
@@ -30,9 +30,9 @@ export default function ProductsPage() {
     setFiltered(f); setPage(1);
   }, [query, all]);
 
-  const inactivate = async id => {
-    if (!window.confirm('Inativar este produto?')) return;
-    try { await inactivateProduct(id); await load(); }
+  const reactivate = async id => {
+    if (!window.confirm('Reativar este produto?')) return;
+    try { await activateProduct(id); await load(); }
     catch (e) { alert(e.message); }
   };
 
@@ -133,9 +133,9 @@ export default function ProductsPage() {
                         <div style={{ display:'flex', gap:4 }}>
                           <button className="btn btn-sm btn-sec" onClick={() => navigate(`/produtos/${p.id}/editar`)}
                             title="Editar" style={{ padding:'2px 7px' }}>✏️</button>
-                          {p.status === 'Ativo' && (
-                            <button className="btn btn-sm btn-danger" onClick={() => inactivate(p.id)}
-                              title="Inativar" style={{ padding:'2px 7px' }}>🗑</button>
+                          {p.status !== 'Ativo' && (
+                            <button className="btn btn-sm btn-sec" onClick={() => reactivate(p.id)}
+                              title="Reativar" style={{ padding:'2px 7px' }}>↺</button>
                           )}
                         </div>
                       </td>

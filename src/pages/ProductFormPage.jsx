@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createProduct, getProduct, updateProduct } from '../services/api';
+import { createProduct, getProduct, updateProduct, deleteProduct } from '../services/api';
 
 export default function ProductFormPage() {
   const navigate = useNavigate();
@@ -30,6 +30,12 @@ export default function ProductFormPage() {
     if (isNaN(parseFloat(form.preco)) || parseFloat(form.preco) < 0) return 'Preço inválido.';
     if (isNaN(parseInt(form.quantidade)) || parseInt(form.quantidade) < 0) return 'Quantidade inválida.';
     return null;
+  };
+
+  const remove = async () => {
+    if (!window.confirm('Apagar este produto permanentemente?')) return;
+    try { await deleteProduct(id); navigate('/produtos'); }
+    catch (e) { setError(e.message); }
   };
 
   const submit = async () => {
@@ -119,6 +125,11 @@ export default function ProductFormPage() {
 
             <div className="form-footer">
               <button className="btn btn-sec" onClick={() => navigate('/produtos')}>Cancelar</button>
+              {isEdit && (
+                <button className="btn btn-danger" onClick={remove} disabled={loading}>
+                  🗑 Apagar
+                </button>
+              )}
               <button className="btn" onClick={submit} disabled={loading}>
                 {loading ? <span className="spinner" /> : isEdit ? '💾 Salvar Alterações' : '💾 Salvar Produto'}
               </button>

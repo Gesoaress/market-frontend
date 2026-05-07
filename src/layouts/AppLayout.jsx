@@ -3,9 +3,11 @@ import { useAuth } from '../contexts/AuthContext';
 import WinWindow from '../components/WinWindow';
 
 const NAV = [
-  { to: '/produtos',     icon: '📦', label: 'Produtos'        },
+  { to: '/dashboard',    icon: '📊', label: 'Dashboard'        },
+  { to: '/produtos',     icon: '📦', label: 'Produtos'         },
   { to: '/produtos/novo',icon: '➕', label: 'Novo Produto'     },
   { to: '/vendas/nova',  icon: '🛒', label: 'Registrar Venda'  },
+  { to: '/vendas',       icon: '📋', label: 'Histórico'        },
 ];
 
 export default function AppLayout() {

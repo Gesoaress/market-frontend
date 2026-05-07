@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductFormPage from './pages/ProductFormPage';
 import SalePage from './pages/SalePage';
+import SalesListPage from './pages/SalesListPage';
+import DashboardPage from './pages/DashboardPage';
 import './styles/global.css';
 
 export default function App() {
@@ -19,14 +21,16 @@ export default function App() {
 
           <Route element={<PrivateRoute />}>
             <Route element={<AppLayout />}>
+              <Route path="/dashboard"             element={<DashboardPage />} />
               <Route path="/produtos"              element={<ProductsPage />} />
               <Route path="/produtos/novo"         element={<ProductFormPage />} />
               <Route path="/produtos/:id/editar"   element={<ProductFormPage />} />
               <Route path="/vendas/nova"           element={<SalePage />} />
+              <Route path="/vendas"                element={<SalesListPage />} />
             </Route>
           </Route>
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
