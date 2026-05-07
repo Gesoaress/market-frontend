@@ -28,7 +28,6 @@ export default function LoginPage() {
     }
   };
 
-  
   return (
     <div className="auth-page">
       <WinWindow title="Login" icon="🔐" className="auth-win">
