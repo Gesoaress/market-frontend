@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 import AppLayout from './layouts/AppLayout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -9,6 +10,7 @@ import ProductFormPage from './pages/ProductFormPage';
 import SalePage from './pages/SalePage';
 import SalesListPage from './pages/SalesListPage';
 import DashboardPage from './pages/DashboardPage';
+import AdminPage from './pages/AdminPage';
 import './styles/global.css';
 
 export default function App() {
@@ -27,6 +29,12 @@ export default function App() {
               <Route path="/produtos/:id/editar"   element={<ProductFormPage />} />
               <Route path="/vendas/nova"           element={<SalePage />} />
               <Route path="/vendas"                element={<SalesListPage />} />
+            </Route>
+          </Route>
+
+          <Route element={<AdminRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/admin/mercados" element={<AdminPage />} />
             </Route>
           </Route>
 

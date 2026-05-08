@@ -7,7 +7,9 @@ export default function ProductFormPage() {
   const { id }   = useParams();
   const isEdit   = Boolean(id);
 
-  const [form, setForm]       = useState({ nome:'', preco:'', quantidade:'', status:'Ativo', img:'' });
+  const CATEGORIAS = ['Bebidas','Alimentos','Laticínios','Higiene','Limpeza','Hortifruti','Cereais e Grãos','Outros'];
+
+  const [form, setForm]       = useState({ nome:'', preco:'', quantidade:'', status:'Ativo', img:'', categoria:'Outros' });
   const [error, setError]     = useState('');
   const [loading, setLoading] = useState(false);
   const [fetch_,  setFetch]   = useState(isEdit);
@@ -17,7 +19,7 @@ export default function ProductFormPage() {
     (async () => {
       try {
         const d = await getProduct(id);
-        setForm({ nome: d.nome??'', preco: d.preco??'', quantidade: d.quantidade??'', status: d.status??'Ativo', img: d.img??'' });
+        setForm({ nome: d.nome??'', preco: d.preco??'', quantidade: d.quantidade??'', status: d.status??'Ativo', img: d.img??'', categoria: d.categoria??'Outros' });
       } catch(e) { setError(e.message); }
       finally { setFetch(false); }
     })();
@@ -41,7 +43,7 @@ export default function ProductFormPage() {
   const submit = async () => {
     const err = validate(); if (err) { setError(err); return; }
     setError(''); setLoading(true);
-    const payload = { nome: form.nome.trim(), preco: parseFloat(form.preco), quantidade: parseInt(form.quantidade), status: form.status, img: form.img.trim() };
+    const payload = { nome: form.nome.trim(), preco: parseFloat(form.preco), quantidade: parseInt(form.quantidade), status: form.status, img: form.img.trim(), categoria: form.categoria };
     try {
       isEdit ? await updateProduct(id, payload) : await createProduct(payload);
       navigate('/produtos');
@@ -102,6 +104,13 @@ export default function ProductFormPage() {
               <div className="field">
                 <label>Estoque Inicial</label>
                 <input name="quantidade" type="number" min="0" placeholder="0" value={form.quantidade} onChange={handle} />
+              </div>
+
+              <div className="field span-2">
+                <label>Categoria</label>
+                <select name="categoria" value={form.categoria} onChange={handle}>
+                  {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
               </div>
 
               <div className="field span-2">

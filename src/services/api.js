@@ -38,6 +38,10 @@ export const updateProduct     = (id, p) => req('PUT',   `/products/${id}`, p);
 export const inactivateProduct = id      => req('PATCH', `/products/${id}/inactivate`);
 export const activateProduct   = id      => req('PATCH', `/products/${id}/activate`);
 export const deleteProduct     = id      => req('DELETE', `/products/${id}`);
-export const createSale        = (produtoId, quantidade) => req('POST', '/sales', { product_id: produtoId, quantity: quantidade });
-export const listSales         = ()      => req('GET', '/sales').then(d => d.vendas);
+export const createOrder       = (items) => req('POST', '/sales', { items });
+export const listOrders        = ()      => req('GET', '/sales').then(d => d.pedidos);
 export const getDashboard      = ()      => req('GET', '/dashboard');
+
+export const adminListSellers  = ()         => req('GET',    '/admin/sellers').then(d => d.mercados);
+export const adminDeleteSeller = id         => req('DELETE', `/admin/sellers/${id}`);
+export const adminToggleSeller = id         => req('PATCH',  `/admin/sellers/${id}/toggle`);

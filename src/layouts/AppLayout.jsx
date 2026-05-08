@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import WinWindow from '../components/WinWindow';
 
-const NAV = [
+const NAV_SELLER = [
   { to: '/dashboard',    icon: '📊', label: 'Dashboard'        },
   { to: '/produtos',     icon: '📦', label: 'Produtos'         },
   { to: '/produtos/novo',icon: '➕', label: 'Novo Produto'     },
@@ -10,9 +11,19 @@ const NAV = [
   { to: '/vendas',       icon: '📋', label: 'Histórico'        },
 ];
 
+const NAV_ADMIN = [
+  { to: '/admin/mercados', icon: '🏪', label: 'Mercados' },
+];
+
 export default function AppLayout() {
   const { seller, signOut } = useAuth();
+  const NAV = seller?.role === 'ADMIN' ? NAV_ADMIN : NAV_SELLER;
   const navigate = useNavigate();
+  const marketName = seller?.name ?? 'MiniMkt';
+
+  useEffect(() => {
+    document.title = `${marketName} – Gestão de Estoque`;
+  }, [marketName]);
 
   return (
     <div className="app-shell">
@@ -21,7 +32,7 @@ export default function AppLayout() {
         <div className="sb-logo">
           <div className="sb-logo-icon">🏪</div>
           <div>
-            <div className="sb-logo-name">MiniMkt</div>
+            <div className="sb-logo-name">{marketName}</div>
             <div className="sb-logo-sub">GESTÃO DE ESTOQUE</div>
           </div>
         </div>
@@ -43,8 +54,8 @@ export default function AppLayout() {
         <div className="sb-user">
           <div className="sb-avatar">👤</div>
           <div>
-            <div className="sb-user-name">{seller?.nome?.split(' ')[0] ?? 'Usuário'}</div>
-            <div className="sb-user-role">Administrador</div>
+            <div className="sb-user-name">{marketName}</div>
+            <div className="sb-user-role">{seller?.role === 'ADMIN' ? 'Admin' : 'Mercado'}</div>
           </div>
           <button className="sb-logout" onClick={() => { signOut(); navigate('/login'); }}>sair</button>
         </div>
@@ -52,7 +63,7 @@ export default function AppLayout() {
 
       {/* Conteúdo principal como janela XP */}
       <div className="main-area">
-        <WinWindow title="Sistema" icon="🪟">
+        <WinWindow title={marketName} icon="🪟">
           <Outlet />
         </WinWindow>
       </div>

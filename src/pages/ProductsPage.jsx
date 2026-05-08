@@ -6,12 +6,14 @@ const fmt  = p => 'R$ ' + Number(p).toFixed(2).replace('.', ',');
 const EMOJI = ['📦','🥛','🍚','🫘','🥕','🧀','🍳','🌽','🥜','🧅'];
 const em    = n => { let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))&0xffff; return EMOJI[h%EMOJI.length]; };
 const PAGE  = 8;
+const CATEGORIAS = ['Todas','Bebidas','Alimentos','Laticínios','Higiene','Limpeza','Hortifruti','Cereais e Grãos','Outros'];
 
 export default function ProductsPage() {
   const navigate = useNavigate();
   const [all,      setAll]      = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [query,    setQuery]    = useState('');
+  const [categoria, setCategoria] = useState('Todas');
   const [page,     setPage]     = useState(1);
   const [loading,  setLoading]  = useState(true);
   const [error,    setError]    = useState('');
@@ -26,9 +28,13 @@ export default function ProductsPage() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    const f = all.filter(p => p.nome.toLowerCase().includes(query.toLowerCase()));
+    const f = all.filter(p => {
+      const matchNome = p.nome.toLowerCase().includes(query.toLowerCase());
+      const matchCat  = categoria === 'Todas' || p.categoria === categoria;
+      return matchNome && matchCat;
+    });
     setFiltered(f); setPage(1);
-  }, [query, all]);
+  }, [query, categoria, all]);
 
   const reactivate = async id => {
     if (!window.confirm('Reativar este produto?')) return;
@@ -84,8 +90,12 @@ export default function ProductsPage() {
               </svg>
               <input placeholder="Buscar produto..." value={query} onChange={e => setQuery(e.target.value)} />
             </div>
-            <select style={{ fontSize:11, padding:'3px 6px', border:'1px solid #7d9070', borderRadius:3, background:'#fff', fontFamily:'var(--font)' }}>
-              <option>Categoria: Todos</option>
+            <select
+              value={categoria}
+              onChange={e => setCategoria(e.target.value)}
+              style={{ fontSize:11, padding:'3px 6px', border:'1px solid #7d9070', borderRadius:3, background:'#fff', fontFamily:'var(--font)' }}
+            >
+              {CATEGORIAS.map(c => <option key={c} value={c}>{c === 'Todas' ? 'Categoria: Todas' : c}</option>)}
             </select>
           </div>
 

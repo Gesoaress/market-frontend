@@ -3,7 +3,7 @@ import {
   BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
-import { getDashboard, listSales } from '../services/api';
+import { getDashboard, listOrders } from '../services/api';
 
 const fmt   = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
 const fmtDt = s => {
@@ -47,9 +47,10 @@ export default function DashboardPage() {
   const load = useCallback(async () => {
     setLoading(true); setError('');
     try {
-      const [s, v] = await Promise.all([getDashboard(), listSales()]);
+      const [s, orders] = await Promise.all([getDashboard(), listOrders()]);
       setStats(s);
-      setSales(v.slice(0, 5));
+      const flatSales = orders.flatMap(o => o.itens.map(i => ({ ...i, created_at: o.created_at })));
+      setSales(flatSales.slice(0, 5));
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
   }, []);
@@ -115,7 +116,7 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Gráficos */}
+            {/* Gráficos linha 1 */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginTop:16 }}>
 
               {/* Vendas por dia */}
@@ -158,6 +159,28 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* Vendas por categoria */}
+            {stats.vendas_por_categoria?.length > 0 && (
+              <div className="groupbox" style={{ marginTop:12 }}>
+                <div className="groupbox-title">Vendas por Categoria</div>
+                <div className="groupbox-body">
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={stats.vendas_por_categoria} margin={{ top:4, right:8, left:0, bottom:0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2a3a1a" />
+                      <XAxis dataKey="categoria" tick={{ fontSize:10, fill:'#888' }} />
+                      <YAxis tickFormatter={v => 'R$'+v} tick={{ fontSize:10, fill:'#888' }} width={52} />
+                      <Tooltip content={<TooltipMoeda />} />
+                      <Bar dataKey="total" radius={[3,3,0,0]}>
+                        {stats.vendas_por_categoria.map((_, i) => (
+                          <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
 
             {/* Últimas vendas */}
             <div className="groupbox" style={{ marginTop:12 }}>
