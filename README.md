@@ -1,79 +1,46 @@
-# MiniMkt - Sistema de Gestão de Estoque
+# Market Management — Front-end
 
-## Descrição
-MiniMkt é um sistema completo de gestão de estoque para mini mercados, desenvolvido com React no front-end e Node.js no back-end. Permite o cadastro de produtos, controle de vendas, monitoramento de estoque e dashboard com indicadores em tempo real.
+Interface web para gerenciamento de mini mercados. Desenvolvida em React com Vite, permite login, cadastro de produtos, registro de vendas e visualização de indicadores no dashboard.
+
+---
+
+## Tecnologias
+
+- **React 18** + **Vite**
+- **React Router DOM** — navegação entre páginas
+- **Context API** — gerenciamento de autenticação
+- **Recharts** — gráficos e indicadores no dashboard
+- **CSS** customizado com tema visual estilo Windows XP
+
+---
 
 ## Funcionalidades
 
-### Autenticação e Cadastro
-- Cadastro de mini mercado com CNPJ, e-mail, celular e senha
-- Ativação via código enviado por WhatsApp
-- Login seguro com token JWT
-- Logout e proteção de rotas
+### Autenticação
+- Cadastro de mini mercado (nome, CNPJ, e-mail, celular, senha)
+- Ativação de conta via código recebido por WhatsApp
+- Login com token JWT
+- Proteção de rotas para usuários autenticados
 
-### Gestão de Produtos
-- Listagem de produtos com paginação e busca
-- Cadastro e edição de produtos (nome, preço, quantidade, imagem, status)
-- Inativação de produtos
-- Estatísticas: total de produtos, ativos, estoque baixo
+### Produtos
+- Listagem com busca e paginação
+- Cadastro e edição (nome, preço, quantidade, imagem, status)
+- Ativação e inativação de produtos
 
-### Registro de Vendas
-- Seleção de produto ativo em estoque
-- Ajuste de quantidade
-- Confirmação de venda com atualização automática do estoque
+### Vendas
+- Seleção de produto em estoque
+- Registro de venda com atualização automática do estoque
+- Histórico de vendas
 
 ### Dashboard
-- Indicadores principais: valor total vendido, unidades em estoque, produtos com estoque baixo, sem estoque
+- Total vendido, unidades em estoque, produtos em falta
 - Top 5 produtos mais vendidos
 - Últimas vendas registradas
-- Monitoramento de estoque crítico (itens com menos de 15 unidades)
+- Alerta de estoque crítico (menos de 15 unidades)
 
-## Tecnologias Utilizadas
+---
 
-### Front-end
-- **React** com Vite
-- **React Router** para navegação
-- **Context API** para gerenciamento de estado de autenticação
-- **CSS** customizado com tema Windows XP-like
-- Componentes reutilizáveis (WinWindow, etc.)
-
-### Back-end (assumido)
-- Node.js com Express
-- Banco de dados (provavelmente PostgreSQL ou similar)
-- Autenticação JWT
-- API RESTful
-
-## Como Rodar o Projeto
-
-### Pré-requisitos
-- Node.js (versão 16 ou superior)
-- npm ou yarn
-
-### Instalação
-1. Clone o repositório:
-   ```bash
-   git clone <url-do-repositorio>
-   cd dash-fullstack-ft
-   ```
-
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-
-3. Inicie o servidor de desenvolvimento:
-   ```bash
-   npm run dev
-   ```
-
-4. Abra o navegador em `http://localhost:3000`
-
-### Build para Produção
-```bash
-npm run build
-```
-
-## Estrutura do Projeto
+## Estrutura
 
 ```
 src/
@@ -81,51 +48,63 @@ src/
 │   ├── PrivateRoute.jsx    # Proteção de rotas autenticadas
 │   └── WinWindow.jsx       # Componente de janela estilo Windows
 ├── contexts/
-│   └── AuthContext.jsx     # Contexto de autenticação
+│   └── AuthContext.jsx     # Contexto de autenticação JWT
 ├── layouts/
 │   └── AppLayout.jsx       # Layout principal com sidebar
 ├── pages/
 │   ├── DashboardPage.jsx   # Dashboard com indicadores
 │   ├── LoginPage.jsx       # Tela de login
+│   ├── RegisterPage.jsx    # Cadastro de mercado
 │   ├── ProductsPage.jsx    # Listagem de produtos
 │   ├── ProductFormPage.jsx # Formulário de produto
-│   ├── RegisterPage.jsx    # Cadastro de mercado
-│   └── SalePage.jsx        # Registro de venda
+│   ├── SalePage.jsx        # Registro de venda
+│   └── SalesListPage.jsx   # Histórico de vendas
 ├── services/
 │   └── api.js              # Chamadas para a API back-end
 ├── styles/
 │   └── global.css          # Estilos globais
-├── App.jsx                 # Rotas principais
+├── App.jsx                 # Rotas da aplicação
 └── main.jsx                # Ponto de entrada
 ```
 
-## Rotas da Aplicação
+---
 
-- `/login` - Login
-- `/cadastro` - Cadastro de mercado
-- `/dashboard` - Dashboard (protegida)
-- `/produtos` - Listagem de produtos (protegida)
-- `/produtos/novo` - Novo produto (protegida)
-- `/produtos/:id/editar` - Editar produto (protegida)
-- `/vendas/nova` - Registrar venda (protegida)
+## Rotas
 
-## API Endpoints Utilizados
+| Rota | Descrição | Protegida |
+|------|-----------|-----------|
+| `/login` | Login | Não |
+| `/cadastro` | Cadastro de mercado | Não |
+| `/dashboard` | Indicadores gerais | Sim |
+| `/produtos` | Listagem de produtos | Sim |
+| `/produtos/novo` | Novo produto | Sim |
+| `/produtos/:id/editar` | Editar produto | Sim |
+| `/vendas/nova` | Registrar venda | Sim |
+| `/vendas` | Histórico de vendas | Sim |
 
-- `POST /api/sellers` - Criar vendedor
-- `POST /api/sellers/activate` - Ativar conta
-- `POST /api/auth/login` - Login
-- `GET /api/products` - Listar produtos
-- `POST /api/products` - Criar produto
-- `PUT /api/products/:id` - Atualizar produto
-- `DELETE /api/products/:id` - Inativar produto
-- `POST /api/sales` - Registrar venda
-- `GET /api/sales` - Listar vendas
+---
 
-## Estilo Visual
-O front-end adota um tema inspirado no Windows XP, com janelas, botões e cores nostálgicas, proporcionando uma interface amigável e intuitiva.
+## Como rodar
 
-## Contribuição
-Para contribuir, faça um fork do projeto, crie uma branch para sua feature e envie um pull request.
+```bash
+git clone https://github.com/Gesoaress/market-frontend.git
+cd market-frontend
+npm install
+npm run dev
+```
 
-## Licença
-Este projeto é licenciado sob a MIT License.
+Acesse em `http://localhost:5173`.
+
+> O back-end precisa estar rodando em `http://localhost:5000`. Veja o repositório [FullStack---Impacta](https://github.com/Gesoaress/FullStack---Impacta).
+
+### Build para produção
+
+```bash
+npm run build
+```
+
+---
+
+## Projeto relacionado
+
+- **Back-end:** [FullStack---Impacta](https://github.com/Gesoaress/FullStack---Impacta)
