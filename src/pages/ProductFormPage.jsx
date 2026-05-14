@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createProduct, getProduct, updateProduct, deleteProduct } from '../services/api';
+import { createProduct, getProduct, updateProduct, deleteProduct, uploadImage } from '../services/api';
 
 export default function ProductFormPage() {
   const navigate = useNavigate();
@@ -9,10 +9,12 @@ export default function ProductFormPage() {
 
   const CATEGORIAS = ['Bebidas','Alimentos','Laticínios','Higiene','Limpeza','Hortifruti','Cereais e Grãos','Outros'];
 
-  const [form, setForm]       = useState({ nome:'', preco:'', quantidade:'', status:'Ativo', img:'', categoria:'Outros' });
-  const [error, setError]     = useState('');
-  const [loading, setLoading] = useState(false);
-  const [fetch_,  setFetch]   = useState(isEdit);
+  const [form, setForm]         = useState({ nome:'', preco:'', quantidade:'', status:'Ativo', img:'', categoria:'Outros' });
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [fetch_,  setFetch]     = useState(isEdit);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef();
 
   useEffect(() => {
     if (!isEdit) return;
@@ -26,6 +28,17 @@ export default function ProductFormPage() {
   }, [id, isEdit]);
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  const handleFile = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true); setError('');
+    try {
+      const { url } = await uploadImage(file);
+      setForm(f => ({ ...f, img: url }));
+    } catch(e) { setError(e.message); }
+    finally { setUploading(false); e.target.value = ''; }
+  };
 
   const validate = () => {
     if (!form.nome.trim()) return 'Informe o nome.';
@@ -58,7 +71,7 @@ export default function ProductFormPage() {
     </div>
   );
 
-  const imgOk = form.img.startsWith('http');
+  const imgOk = !!form.img;
   const code  = isEdit ? String(id).padStart(5,'0') : (Math.floor(Math.random()*99999)).toString().padStart(5,'0');
 
   return (
@@ -114,12 +127,43 @@ export default function ProductFormPage() {
               </div>
 
               <div className="field span-2">
-                <label>Imagem (URL)</label>
+                <label>Imagem do Produto</label>
                 <div className="img-preview-row">
                   <div className="img-box">
-                    {imgOk ? <img src={form.img} alt="preview" onError={e=>e.target.style.display='none'} /> : '📦'}
+                    {imgOk
+                      ? <img src={form.img} alt="preview" onError={e => e.target.style.display='none'} />
+                      : '📦'}
                   </div>
-                  <input name="img" placeholder="https://..." value={form.img} onChange={handle} style={{ flex:1 }} />
+                  <div style={{ flex:1, display:'flex', flexDirection:'column', gap:6 }}>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                      ref={fileRef}
+                      onChange={handleFile}
+                      style={{ display:'none' }}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-sec"
+                      onClick={() => fileRef.current.click()}
+                      disabled={uploading}
+                      style={{ width:'100%' }}
+                    >
+                      {uploading ? <><span className="spinner" /> Enviando...</> : '📁 Selecionar arquivo'}
+                    </button>
+                    {form.img && (
+                      <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                        <span style={{ fontSize:10, color:'#666', flex:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                          {form.img.split('/').pop()}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setForm(f => ({ ...f, img: '' }))}
+                          style={{ background:'none', border:'none', color:'#c0392b', cursor:'pointer', fontSize:13 }}
+                        >✕</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
