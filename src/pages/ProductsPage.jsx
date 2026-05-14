@@ -55,7 +55,6 @@ export default function ProductsPage() {
         <div className="toolbar-right">
           <button className="btn btn-sm btn-sec" onClick={load}>↺ Atualizar</button>
           <button className="btn btn-sm" onClick={() => navigate('/produtos/novo')}>+ Novo Produto</button>
-          <button className="btn btn-sm btn-sec">⬇ Exportar</button>
         </div>
       </div>
 

@@ -31,6 +31,13 @@ export const activateSeller = (celular, codigo) =>
   fetch(`${BASE}/sellers/activate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: celular, code: codigo }) })
   .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.msg || d.message || d.erro || 'Código inválido'); return d; });
 
+export const uploadImage = file => {
+  const form = new FormData();
+  form.append('file', file);
+  return fetch('/api/upload', { method: 'POST', headers: { Authorization: `Bearer ${token()}` }, body: form })
+    .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.erro || 'Erro no upload'); return d; });
+};
+
 export const listProducts      = ()      => req('GET',   '/products').then(d => d.produtos);
 export const getProduct        = id      => req('GET',   `/products/${id}`).then(d => d.produto);
 export const createProduct     = payload => req('POST',  '/products', payload);
